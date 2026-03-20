@@ -1,0 +1,102 @@
+:root {
+  --bg1: #b8e7ff;
+  --bg2: #ffe1f0;
+  --ink: rgba(0, 0, 0, 0.75);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+    Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1100px 700px at 20% 10%, var(--bg1), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, var(--bg2), transparent 55%),
+    linear-gradient(180deg, #cfefff 0%, #fff2fb 60%, #ffffff 100%);
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+#midImage {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  max-width: 42vmin;
+  max-height: 62vmin;
+  width: auto;
+  height: auto;
+
+  /* Mượt khi lật */
+  transition: transform 80ms linear;
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.25));
+}
+
+#midImage.flipped {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+/* Falling flower */
+.flower {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.14));
+}
+
+.flower {
+  animation: fall var(--duration) cubic-bezier(0.2, 0.75, 0.2, 1) var(--delay) both;
+}
+
+/* The SVG artwork */
+.flowerSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes fall {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.8);
+  }
+  10% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%)
+      translate3d(calc(var(--drift) * 1px), 120vh, 0)
+      rotate(var(--rot1))
+      scale(1.02);
+  }
+}
+
+/* Optional: tiny ground fade for nicer contrast */
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -40px;
+  height: 220px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.9) 55%, #ffffff 100%);
+  pointer-events: none;
+}
+
