@@ -170,7 +170,7 @@ function spawnFlowers(clientX, clientY) {
     // - Biến mất chậm thêm gấp 2 lần => fadeDuration = base * 2
     const baseDuration = rand(9600, 18600);
     const durationMove = Math.round(baseDuration * 2);
-    const durationFade = Math.round(baseDuration * 2);
+    const durationFade = Math.round(baseDuration / 2);
     const delay = rand(0, 340);
     const rot0 = rand(-180, 180);
     const rot1 = rot0 + rand(-540, 540);
