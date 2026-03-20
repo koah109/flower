@@ -24,6 +24,7 @@ body {
   inset: 0;
   cursor: pointer;
   user-select: none;
+  z-index: 1;
 }
 
 #midImage {
@@ -31,7 +32,7 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 0;
   pointer-events: none;
   max-width: 42vmin;
   max-height: 62vmin;
