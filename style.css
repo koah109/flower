@@ -76,13 +76,18 @@ body {
 
 @keyframes fallMove {
   from {
-    transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.8);
+    transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.3);
+  }
+  30% {
+    transform: translate(-50%, -50%)
+      translate3d(calc(var(--dx) * 1.05px), calc(var(--dy) * 1.05px), 0)
+      rotate(calc(var(--rot0) * 0.15 + var(--rot1) * 0.85)) scale(1.08);
   }
   to {
     transform: translate(-50%, -50%)
-      translate3d(calc(var(--drift) * 1px), 120vh, 0)
+      translate3d(calc(var(--dx) * 1px), calc(var(--dy) * 1px), 0)
       rotate(var(--rot1))
-      scale(1.02);
+      scale(0.92);
   }
 }
 

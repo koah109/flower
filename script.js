@@ -121,7 +121,11 @@ function spawnFlowers(clientX, clientY) {
     el.className = "flower";
 
     const size = rand(22, 44);
-    const drift = rand(-20, 20);
+    // Firework-like: spread outward in all directions
+    const angle = rand(0, Math.PI * 2);
+    const distance = rand(120, 360) * (size / 36); // scale with flower size
+    const dx = Math.cos(angle) * distance;
+    const dy = Math.sin(angle) * distance;
     // Timing mới:
     // - Rơi chậm thêm 3 lần => moveDuration = base * 3
     // - Biến mất chậm thêm gấp 2 lần => fadeDuration = base * 2
@@ -135,7 +139,8 @@ function spawnFlowers(clientX, clientY) {
     el.style.setProperty("--x", `${x + rand(-14, 14)}px`);
     el.style.setProperty("--y", `${y + rand(-12, 16)}px`);
     el.style.setProperty("--size", `${size}px`);
-    el.style.setProperty("--drift", `${drift}`);
+    el.style.setProperty("--dx", `${dx}`);
+    el.style.setProperty("--dy", `${dy}`);
     el.style.setProperty("--moveDuration", `${durationMove}ms`);
     el.style.setProperty("--fadeDuration", `${durationFade}ms`);
     el.style.setProperty("--delay", `${delay}ms`);
