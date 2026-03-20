@@ -6,6 +6,7 @@ let flowerUid = 0;
 
 const presets = [
   {
+    kind: "flower",
     name: "blue",
     // Hoa xanh trong ảnh thường có cảm giác "clover" (ít cánh hơn)
     petalCount: 5,
@@ -20,6 +21,7 @@ const presets = [
     petalStroke: "rgba(255,255,255,0.30)",
   },
   {
+    kind: "flower",
     name: "yellow",
     // Hoa vàng nhìn giống "daisy" (nhiều cánh)
     petalCount: 8,
@@ -34,6 +36,7 @@ const presets = [
     petalStroke: "rgba(255,255,255,0.38)",
   },
   {
+    kind: "flower",
     name: "red",
     // Hoa đỏ kiểu daisy
     petalCount: 8,
@@ -46,6 +49,12 @@ const presets = [
     petalRy: 20,
     petalCy: 18,
     petalStroke: "rgba(255,255,255,0.40)",
+  },
+  {
+    kind: "heart",
+    name: "heart",
+    heartColor: "#ff3b4a",
+    heartHighlight: "#ff7a86",
   },
 ];
 
@@ -106,6 +115,36 @@ function makeFlowerSVG(preset, petalPhaseDeg) {
   `;
 }
 
+function makeHeartSVG(preset) {
+  const uid = ++flowerUid;
+  return `
+    <svg class="flowerSvg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <filter id="softShadow${uid}" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.24)"/>
+        </filter>
+      </defs>
+      <g filter="url(#softShadow${uid})">
+        <path
+          d="M50 88s-34-20-34-47c0-13 8-21 20-21 8 0 13 4 14 7 1-3 6-7 14-7 12 0 20 8 20 21 0 27-34 47-34 47z"
+          fill="${preset.heartColor}"
+          stroke="rgba(255,255,255,0.35)"
+          stroke-width="3"
+          opacity="0.98"
+        />
+        <path
+          d="M40 44c-4 6-3 13 1 18"
+          fill="none"
+          stroke="${preset.heartHighlight}"
+          stroke-width="6"
+          stroke-linecap="round"
+          opacity="0.7"
+        />
+      </g>
+    </svg>
+  `;
+}
+
 function spawnFlowers(clientX, clientY) {
   const rect = scene.getBoundingClientRect();
   const x = clientX - rect.left;
@@ -113,10 +152,10 @@ function spawnFlowers(clientX, clientY) {
 
   // Mỗi lần click tạo đúng 20 bông
   const count = 20;
+  const heartIndex = Math.floor(rand(0, count));
   for (let i = 0; i < count; i++) {
     if (scene.childElementCount > MAX_FLOWERS) break;
 
-    const preset = pickPreset();
     const el = document.createElement("span");
     el.className = "flower";
 
@@ -131,7 +170,7 @@ function spawnFlowers(clientX, clientY) {
     // - Biến mất chậm thêm gấp 2 lần => fadeDuration = base * 2
     const baseDuration = rand(9600, 18600);
     const durationMove = Math.round(baseDuration * 2);
-    const durationFade = Math.round(baseDuration / 2);
+    const durationFade = Math.round(baseDuration * 2);
     const delay = rand(0, 340);
     const rot0 = rand(-180, 180);
     const rot1 = rot0 + rand(-540, 540);
@@ -147,8 +186,14 @@ function spawnFlowers(clientX, clientY) {
     el.style.setProperty("--rot0", `${rot0}deg`);
     el.style.setProperty("--rot1", `${rot1}deg`);
 
-    const petalPhaseDeg = rand(0, 360);
-    el.innerHTML = makeFlowerSVG(preset, petalPhaseDeg);
+    if (i === heartIndex) {
+      const heartPreset = presets.find((p) => p.kind === "heart");
+      el.innerHTML = makeHeartSVG(heartPreset);
+    } else {
+      const preset = pickPreset();
+      const petalPhaseDeg = rand(0, 360);
+      el.innerHTML = makeFlowerSVG(preset, petalPhaseDeg);
+    }
 
     // Có 2 animation (move + fade) => chỉ remove khi kết thúc move
     el.addEventListener("animationend", (ev) => {
