@@ -61,7 +61,10 @@ body {
 }
 
 .flower {
-  animation: fall var(--duration) cubic-bezier(0.2, 0.75, 0.2, 1) var(--delay) both;
+  animation:
+    fallMove var(--moveDuration) cubic-bezier(0.2, 0.75, 0.2, 1) var(--delay)
+      both,
+    fallFade var(--fadeDuration) ease var(--delay) both;
 }
 
 /* The SVG artwork */
@@ -71,20 +74,27 @@ body {
   display: block;
 }
 
-@keyframes fall {
+@keyframes fallMove {
+  from {
+    transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.8);
+  }
+  to {
+    transform: translate(-50%, -50%)
+      translate3d(calc(var(--drift) * 1px), 120vh, 0)
+      rotate(var(--rot1))
+      scale(1.02);
+  }
+}
+
+@keyframes fallFade {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.8);
   }
   10% {
     opacity: 1;
   }
   to {
     opacity: 0;
-    transform: translate(-50%, -50%)
-      translate3d(calc(var(--drift) * 1px), 120vh, 0)
-      rotate(var(--rot1))
-      scale(1.02);
   }
 }
 

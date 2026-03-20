@@ -122,9 +122,12 @@ function spawnFlowers(clientX, clientY) {
 
     const size = rand(22, 44);
     const drift = rand(-20, 20);
-    // Tăng thời gian để rơi chậm hơn
-    // Làm chậm 3 lần so với trước
-    const duration = rand(9600, 18600);
+    // Timing mới:
+    // - Rơi chậm thêm 3 lần => moveDuration = base * 3
+    // - Biến mất chậm thêm gấp 2 lần => fadeDuration = base * 2
+    const baseDuration = rand(9600, 18600);
+    const durationMove = Math.round(baseDuration * 2);
+    const durationFade = Math.round(baseDuration / 2);
     const delay = rand(0, 340);
     const rot0 = rand(-180, 180);
     const rot1 = rot0 + rand(-540, 540);
@@ -133,7 +136,8 @@ function spawnFlowers(clientX, clientY) {
     el.style.setProperty("--y", `${y + rand(-12, 16)}px`);
     el.style.setProperty("--size", `${size}px`);
     el.style.setProperty("--drift", `${drift}`);
-    el.style.setProperty("--duration", `${duration}ms`);
+    el.style.setProperty("--moveDuration", `${durationMove}ms`);
+    el.style.setProperty("--fadeDuration", `${durationFade}ms`);
     el.style.setProperty("--delay", `${delay}ms`);
     el.style.setProperty("--rot0", `${rot0}deg`);
     el.style.setProperty("--rot1", `${rot1}deg`);
@@ -141,8 +145,9 @@ function spawnFlowers(clientX, clientY) {
     const petalPhaseDeg = rand(0, 360);
     el.innerHTML = makeFlowerSVG(preset, petalPhaseDeg);
 
-    el.addEventListener("animationend", () => {
-      el.remove();
+    // Có 2 animation (move + fade) => chỉ remove khi kết thúc move
+    el.addEventListener("animationend", (ev) => {
+      if (ev.animationName === "fallMove") el.remove();
     });
 
     scene.appendChild(el);
